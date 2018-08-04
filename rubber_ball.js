@@ -4,11 +4,13 @@ const LEFTBOUND = 0;
 const RIGHTBOUND = 600;
 const UPSPEED = -10;
 const GRAVITY = 0.5;
-const BOOST = 3;
+const BOOST = 1.5;
 const XSPEED = 3.5;
 const GROUNDWIDTH = 12.5;
 const AIRRESIS = 0.02;
 const FRICTION = 0.08;
+const OBJ_WIDTH = 10;
+const PRESSED_WIDTH = OBJ_WIDTH * 0.75;
 
 
 function setup() {
@@ -58,7 +60,10 @@ function dot(){
    */
   this.show = function(){
     fill(0);
-    rect(this.x,this.y,10,10);
+    if(this.ySpeed == 0)
+      rect(this.x, this.y + OBJ_WIDTH - PRESSED_WIDTH, OBJ_WIDTH, PRESSED_WIDTH);
+    else
+      rect(this.x, this.y, OBJ_WIDTH, OBJ_WIDTH);
   }
 
   /*
