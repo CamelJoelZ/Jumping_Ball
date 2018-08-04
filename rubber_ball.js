@@ -1,22 +1,19 @@
 var hero;
-const positionY = 250;
-const boundLeft = 0;
-const boundRight = 1005;
-const upForce = -22;
-const initAcc = 1.5;
-const boost = 20;
+const INITPOS = 250;
+const LEFTBOUND = 0;
+const RIGHTBOUND = 1005;
+const UPSPEED = -22;
+const GRAVITY = 1.5;
+const BOOST = 20;
 
 function setup() {
-  createCanvas(boundRight, 505);
+  createCanvas(RIGHTBOUND, 505);
   hero = new dot();
-  //storke(255);
 
 }
 
 function draw() {
   background(200);
-  //stroke(105);
-  //line(0,310,1005,310)
   hero.bounce();
   hero.update();
   hero.show();
@@ -24,41 +21,57 @@ function draw() {
 
 function keyPressed(){
   if(keyCode === RIGHT_ARROW){
+    // moving to the right
     hero.dirX = 5;
   }
   if(keyCode === LEFT_ARROW){
+    // moving to the left
     hero.dirX = -5;
   }
-  //if(keyCode === DOWN_ARROW){
-  //  hero.acc = boost;
-    //hero.ySpeed = upForce * 1.5;
-  //}
+  if(keyCode === DOWN_ARROW){
+    // give it a downward boost
+    hero.acc = BOOST;
+  }
 }
 
 function dot(){
+  // starting position
   this.x = 0;
-  this.y = positionY;
+  this.y = INITPOS;
+  // x axis speed
   this.dirX = 0;
-  this.ySpeed = upForce;
-  this.acc = initAcc; // m/s^2
+  // initial y axis speed
+  this.ySpeed = UPSPEED;
+  // initial downward gravity
+  this.acc = GRAVITY; // m/s^2
 
+  /*
+   * display the ball after every position update
+   */
   this.show = function(){
     fill(0);
     rect(this.x,this.y,10,10);
   }
 
+  /*
+   * update the position of the rubber_ball according to the x axis speed
+   * stop updating if bounds arrived
+   */
   this.update = function(){
-    if(this.x + this.dirX > boundRight - 10 || this.x + this.dirX < 0) return;
+    if(this.x + this.dirX > RIGHTBOUND - 10 || this.x + this.dirX < UPSPEED) return;
     this.x += this.dirX;
   }
 
+  /*
+   * simulate the gravity applied on the rubber ball 
+   */
   this.bounce = function(){
 
     this.y += this.ySpeed + 0.01 * this.acc;
     this.ySpeed = this.ySpeed + this.acc;
-    if(this.y >= positionY){
-      this.acc = initAcc;
-      this.ySpeed = upForce;
+    if(this.y >= INITPOS){
+      this.acc = GRAVITY;
+      this.ySpeed = UPSPEED;
     }
   }
 
