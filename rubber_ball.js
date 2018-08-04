@@ -4,7 +4,7 @@ const LEFTBOUND = 0;
 const RIGHTBOUND = 600;
 const UPSPEED = -10;
 const GRAVITY = 0.5;
-const BOOST = 10;
+const BOOST = 5;
 const XSPEED = 3.5;
 const GROUNDWIDTH = 12.5;
 const AIRRESIS = 0.02;
@@ -20,8 +20,10 @@ function draw() {
   hero.bounce();
   hero.update();
   if(!keyIsPressed === true) hero.airResis();
-  if(hero.y <= INITPOS-4) hero.show();
-  rect(0,INITPOS-8,RIGHTBOUND,GROUNDWIDTH);
+  //if(hero.y <= INITPOS-4)
+  hero.show();
+  //rect(0,INITPOS-8,RIGHTBOUND,GROUNDWIDTH);
+  line(0,INITPOS+10,RIGHTBOUND,INITPOS+10);
 }
 
 function keyPressed(){
@@ -89,11 +91,13 @@ function dot(){
    */
   this.bounce = function(){
 
-    if(this.ySpeed +  0.001*this.acc <= INITPOS){
-      this.y += this.ySpeed + 0.0000000000001 * this.acc;
+    if(this.y + this.ySpeed + this.acc <= INITPOS){
+      this.y += this.ySpeed + this.acc;
       this.ySpeed = this.ySpeed + this.acc;
     }
-    if(this.y >= INITPOS){
+    else this.y = INITPOS;
+
+    if(this.y == INITPOS){
       // bounce back after a downward boost
       if(this.acc == BOOST) this.ySpeed = UPSPEED * 1.5;
       else this.ySpeed = UPSPEED;
