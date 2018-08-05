@@ -11,6 +11,7 @@ const AIRRESIS = 0.02;
 const FRICTION = 0.08;
 const OBJ_WIDTH = 10;
 const PRESSED_WIDTH = OBJ_WIDTH * 0.75;
+const SHADOW_ADJ = 1;
 
 
 function setup() {
@@ -21,6 +22,7 @@ function setup() {
 
 function draw() {
   background(200);
+  hero.shadow();
   hero.move();
   hero.update();
   if(!keyIsPressed === true) hero.airResis();
@@ -42,6 +44,12 @@ function keyPressed(){
     hero.acc = BOOST;
     // keep the cube on the ground if key not released
   }
+  if(keyIsDown(SHIFT)){
+    if(keyIsPressed === true){
+      hero.quick = 1;
+      hero.dirX *= 2;
+    }
+  }
 }
 
 function dot(){
@@ -54,6 +62,8 @@ function dot(){
   this.ySpeed = UPSPEED;
   // initial downward gravity
   this.acc = GRAVITY; // m/s^2
+  // determine if speed up
+  this.quick = 0;
 
   /*
    * display the ball after every position update
@@ -67,11 +77,28 @@ function dot(){
   }
 
   /*
+   * display the faded object
+   */
+   this.shadow = function(){
+     if(!keyIsDown(SHIFT)) return;
+     if(this.x + this.dirX > RIGHTBOUND - OBJ_WIDTH || this.x + this.dirX < LEFTBOUND ) return;
+
+     fill(80);
+     if(this.ySpeed == 0)
+       rect(this.x, this.y + OBJ_WIDTH - PRESSED_WIDTH, OBJ_WIDTH, PRESSED_WIDTH);
+     else{
+       rect(this.x, this.y, OBJ_WIDTH, OBJ_WIDTH);
+       fill(80);
+       rect(this.x - this.dirX/1000, this.y - (this.ySpeed + this.acc)/1000, OBJ_WIDTH, OBJ_WIDTH);
+     }
+   }
+
+  /*
    * update the position of the rubber_ball according to the x axis speed
    * stop updating if bounds arrived
    */
   this.update = function(){
-    if(this.x + this.dirX > RIGHTBOUND - 10 || this.x + this.dirX < LEFTBOUND) return;
+    if(this.x + this.dirX > RIGHTBOUND - OBJ_WIDTH || this.x + this.dirX < LEFTBOUND ) return;
     this.x += this.dirX;
   }
   /*
