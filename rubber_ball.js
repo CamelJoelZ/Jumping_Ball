@@ -18,15 +18,15 @@ var fo;
 
 function setup() {
   createCanvas(RIGHTBOUND, 505);
-  hero = new dot(1);
-  fo = new dot(0);
+  hero = new dot(1,0,INITPOS);
+  fo = new dot(0,50,INITPOS);
 }
 
 function draw() {
   background(200);
   line(0,INITPOS+10,RIGHTBOUND,INITPOS+10);
   hero.create();
-  fo.follow();
+  fo.chase(hero);
 }
 
 function keyPressed(){
@@ -52,10 +52,10 @@ function keyPressed(){
 }
 
 class dot{
-  constructor(identity){
+  constructor(identity,x,y){
     // starting position
-    this.x = 0;
-    this.y = INITPOS;
+    this.x = x;
+    this.y = y;
     // x axis speed
     this.dirX = 0;
     // initial y axis speed
@@ -82,9 +82,15 @@ class dot{
    /*
     * utilize the helper func below to create a AI rubber_ball
     */
-  follow() {
-    this.move();
+  chase(obj) {
     this.show();
+    if(this.x == obj.x || this.y == obj.y) return;
+    //this.move();
+    if(this.x > obj.x) this.x -= 2.5;
+    else this.x += 2.5;
+    if(this.y > obj.y) this.y -= 1;
+    else this.y += 1;
+
   }
 
   /*
@@ -144,8 +150,8 @@ class dot{
    */
   stay() {
     if(this.y == INITPOS && keyIsPressed === true && keyIsDown(DOWN_ARROW)){
-         this.ySpeed = 0;
-         this.friction();
+      this.ySpeed = 0;
+      this.friction();
     }
   }
 
